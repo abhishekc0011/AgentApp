@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/agentListFragment">
+
+    <fragment
+        android:id="@+id/agentListFragment"
+        android:name="com.abhishek.agentapp.presentation.agentlist.AgentListFragment"
+        android:label="@string/title_home">
+        <action
+            android:id="@+id/action_list_to_detail"
+            app:destination="@id/agentDetailFragment" />
+        <action
+            android:id="@+id/action_list_to_settings"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/agentDetailFragment"
+        android:name="com.abhishek.agentapp.presentation.agentdetail.AgentDetailFragment"
+        android:label="@string/title_detail">
+        <argument
+            android:name="agent_id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_detail_to_list"
+            app:destination="@id/agentListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.abhishek.agentapp.presentation.settings.SettingsFragment"
+        android:label="@string/title_settings">
+        <action
+            android:id="@+id/action_settings_to_list"
+            app:destination="@id/agentListFragment" />
+    </fragment>
+
+</navigation>
