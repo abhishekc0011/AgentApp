@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.abhishek.agentapp.domain.model.Agent
 import com.abhishek.agentapp.domain.model.AgentPost
 import com.abhishek.agentapp.domain.repository.AgentRepository
+import com.abhishek.agentapp.domain.usecase.AgentUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -23,7 +24,7 @@ data class AgentDetailUiState(
 
 @HiltViewModel
 class AgentDetailViewModel @Inject constructor(
-    private val repository: AgentRepository,
+    private val useCases: AgentUseCases
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AgentDetailUiState())
@@ -36,11 +37,11 @@ class AgentDetailViewModel @Inject constructor(
             try {
                 coroutineScope {
                     val agentDeferred = async {
-                        repository.getUser(agentId).getOrThrow()
+                        useCases.getAgentById(agentId).getOrThrow()
                     }
 
                     val postsDeferred = async {
-                        repository.getAgentPosts(agentId).getOrThrow()
+                        useCases.getAgentPosts(agentId).getOrThrow()
                     }
 
                     val agent = agentDeferred.await()

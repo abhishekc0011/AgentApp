@@ -6,6 +6,13 @@ import com.abhishek.agentapp.data.api.ApiService
 import com.abhishek.agentapp.data.db.AppDatabase
 import com.abhishek.agentapp.data.db.dao.AgentDao
 import com.abhishek.agentapp.data.db.dao.PostDao
+import com.abhishek.agentapp.domain.repository.AgentRepository
+import com.abhishek.agentapp.domain.usecase.AgentUseCases
+import com.abhishek.agentapp.domain.usecase.GetAgentByIdUseCase
+import com.abhishek.agentapp.domain.usecase.GetAgentPostsUseCase
+import com.abhishek.agentapp.domain.usecase.GetAgentsUseCase
+import com.abhishek.agentapp.domain.usecase.RefreshAgentsUseCase
+import com.abhishek.agentapp.domain.usecase.SearchAgentsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -74,4 +81,16 @@ object NetworkModule {
     fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
         return WorkManager.getInstance(context)
     }
+
+    @Provides
+    @Singleton
+    fun provideAgentUseCases(
+        repository: AgentRepository
+    ): AgentUseCases = AgentUseCases(
+        getAgents = GetAgentsUseCase(repository),
+        searchAgents = SearchAgentsUseCase(repository),
+        getAgentById = GetAgentByIdUseCase(repository),
+        getAgentPosts = GetAgentPostsUseCase(repository),
+        refreshAgents = RefreshAgentsUseCase(repository)
+    )
 }

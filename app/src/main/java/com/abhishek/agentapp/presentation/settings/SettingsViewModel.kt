@@ -50,7 +50,6 @@ class SettingsViewModel @Inject constructor(
 
     fun setAutoRefresh(enabled: Boolean) {
         _autoRefresh.value = enabled
-        // Update WorkManager schedule
         if (!enabled) {
             workManager.cancelUniqueWork("agent_refresh")
         }

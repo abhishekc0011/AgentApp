@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.abhishek.agentapp.domain.model.Agent
 import com.abhishek.agentapp.domain.repository.AgentRepository
+import com.abhishek.agentapp.domain.usecase.AgentUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -14,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AgentListViewModel @Inject constructor(
-    private val repository: AgentRepository
+    private val useCases: AgentUseCases
 ) : ViewModel() {
 
     private val _agents = MutableStateFlow<List<Agent>>(emptyList())
@@ -39,7 +40,7 @@ class AgentListViewModel @Inject constructor(
             _isLoading.value = true
             _error.value = null
             offset = 0
-            val result = repository.getAgents(offset = 0)
+            val result = useCases.getAgents(offset = 0)
             result.onSuccess { agents ->
                 _agents.value = agents
                 offset = agents.size
@@ -52,7 +53,7 @@ class AgentListViewModel @Inject constructor(
 
     fun loadMore() {
         viewModelScope.launch {
-            val result = repository.getAgents(offset = offset)
+            val result = useCases.getAgents(offset = offset)
             result.onSuccess { newAgents ->
                 _agents.value += newAgents
                 offset += newAgents.size
@@ -69,9 +70,9 @@ class AgentListViewModel @Inject constructor(
             _error.value = null
 
             val result = if (query.isEmpty()) {
-                repository.getAgents(offset = 0)
+                useCases.getAgents(offset = 0)
             } else {
-                repository.searchAgents(query)
+                useCases.searchAgents(query)
             }
 
             result.onSuccess { agents ->
@@ -86,7 +87,7 @@ class AgentListViewModel @Inject constructor(
     fun refresh() {
         viewModelScope.launch {
             _isLoading.value = true
-            repository.refreshAgents()
+            useCases.refreshAgents()
                 .onSuccess { agents ->
                     _agents.value = agents
                     offset = agents.size
